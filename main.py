@@ -14,6 +14,8 @@ from PyQt5.QtGui import QPixmap
 import os
 import sys
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 class Login_window(QWidget, Ui_Login):
     user_file = ""
@@ -28,14 +30,14 @@ class Login_window(QWidget, Ui_Login):
     def login(self):
         user = self.lineEdit.text()
         password = self.lineEdit_2.text()
-        Users = load_workbook('Users.xlsx')
+        Users = load_workbook(os.path.join(BASE_DIR, 'Users.xlsx'))
         sheet = Users.active
         flag = 0
         for i in range(1, sheet.max_row+1):
             if str(sheet.cell(i, 1).value) == user:
                 flag = 1
                 if str(sheet.cell(i, 2).value) == password:
-                    self.user_file = user + ".xlsx"
+                    self.user_file = os.path.join(BASE_DIR, user + ".xlsx")
                     self.hide()
                     self.main = myMainWindow()
                     self.main.show()
@@ -50,7 +52,7 @@ class Login_window(QWidget, Ui_Login):
     def register(self):
         user = self.lineEdit.text()
         password = self.lineEdit_2.text()
-        Users = load_workbook('Users.xlsx')
+        Users = load_workbook(os.path.join(BASE_DIR, 'Users.xlsx'))
         sheet = Users.active
         flag = 1
         for i in range(1, sheet.max_row+1):
@@ -59,9 +61,9 @@ class Login_window(QWidget, Ui_Login):
                 flag = 0
                 break
         if flag:
-            self.user_file = user + ".xlsx"
+            self.user_file = os.path.join(BASE_DIR, user + ".xlsx")
             sheet.append([user, password])
-            Users.save('Users.xlsx')
+            Users.save(os.path.join(BASE_DIR, 'Users.xlsx'))
             wb = Workbook()
             wb.save(self.user_file)
             self.hide()
@@ -100,12 +102,13 @@ class myMainWindow(QMainWindow, Ui_MainWindow):
         self.lineEdit_3.clear()
 
     def importData(self):
+        import_path = os.path.join(BASE_DIR, "ImportData.xlsx")
         wb = Workbook()
         sheet = wb.active
         for i in range(5):
             sheet.append([datetime.datetime.now().strftime("%Y-%m-%d"), random.choice(self.items),
                          str(random.randint(10, 500)), "无"])
-        wb.save("ImportData.xlsx")
+        wb.save(import_path)
         path = self.filepath()
         if path:
             imp_wb = load_workbook(path)
@@ -118,7 +121,7 @@ class myMainWindow(QMainWindow, Ui_MainWindow):
             acc_wb.save(login.user_file)
 
     def filepath(self):
-        path, filetype = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", os.getcwd(),
+        path, filetype = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", BASE_DIR,
                                                                "All Files(*);;Text Files(*.txt)")
         return path
 
@@ -333,8 +336,9 @@ class Statistic_window(QWidget, Ui_Statistic):
             if y[i]:
                 plt.text(a, b + b/100, "%.2f" % y[i], ha='center', fontsize=12)
         plt.xticks(x)
-        plt.savefig("graph.png")
-        pix = QPixmap("graph.png")
+        graph_path = os.path.join(BASE_DIR, "graph.png")
+        plt.savefig(graph_path)
+        pix = QPixmap(graph_path)
         self.label_2.setPixmap(QPixmap(""))
         self.label_2.setPixmap(pix)
         self.label_2.setScaledContents(True)
