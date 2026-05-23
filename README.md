@@ -59,6 +59,7 @@ python main.py
 | 用户名 | 密码 |
 |--------|------|
 | `0` | `1111` |
+| `User1` | `1111` |
 
 > 注：readme.txt 中提到的 User1 与 Users.xlsx 中实际存储的用户名 `0` 不同，以 Users.xlsx 为准。
 
