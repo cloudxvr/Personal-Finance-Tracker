@@ -16,6 +16,12 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# 自动设置 Qt 平台插件路径，解决 qwindows.dll 找不到的问题
+_qt_plugin_path = os.path.join(sys.prefix, "Lib", "site-packages",
+                               "PyQt5", "Qt5", "plugins", "platforms")
+if os.path.exists(_qt_plugin_path):
+    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = _qt_plugin_path
+
 
 class Login_window(QWidget, Ui_Login):
     user_file = ""

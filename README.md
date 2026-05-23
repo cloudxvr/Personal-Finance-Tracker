@@ -52,6 +52,8 @@ pip install -r requirements.txt
 python main.py
 ```
 
+> main.py 已内置 Qt 平台插件路径自动检测，不需要再手动设置环境变量。
+
 ## 默认账号
 
 | 用户名 | 密码 |
@@ -87,21 +89,13 @@ PyQt5 的 C 扩展不支持 Python 3.14。如果系统默认 Python 为 3.14，�
 
 请确保在项目根目录下运行 `python main.py`，不要从其他目录启动。程序已使用 `BASE_DIR` 自动解析文件路径，但仍建议在项目根目录启动。
 
-### Qt 平台插件错误（qt.qpa.plugin: Could not find the Qt platform plugin "windows"）
+### Qt 平台插件错误（qt.qpa.plugin: Could not find the Qt platform plugin）
 
-此错误表示系统找不到 Qt 平台 DLL。解决方法：
+此错误已在 main.py 中通过自动设置 `QT_QPA_PLATFORM_PLUGIN_PATH` 解决。如果仍出现此问题：
 
-```powershell
-# PowerShell 中设置环境变量后启动
-$env:QT_QPA_PLATFORM_PLUGIN_PATH = ".\.venv\Lib\site-packages\PyQt5\Qt5\plugins\platforms"
-python main.py
-```
-
-或使用 `cmd` 直接启动：
-
-```cmd
-.venv\Scripts\python.exe main.py
-```
+1. 确认使用的是项目 .venv 中的 Python（`.venv\Scripts\python.exe`），不是系统 Python 3.14
+2. 如果 .venv 不存在或损坏，重新创建：`py -3.12 -m venv .venv`
+3. 然后 `pip install -r requirements.txt`
 
 ## 项目结构
 
